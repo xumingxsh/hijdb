@@ -1,10 +1,14 @@
 package HiJDB;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import HiJDB.Impl.ConnectionProxy;
 import HiJDB.Impl.DBOperateImpl;
-import HiJUtil.Generic.IEvent;;
+import HiJUtil.Generic.IEvent;
+import HiJUtil.Generic.IEvent8Param;
+import HiJUtil.Generic.IEventRet8Param;;
 
 /**
  * 数据库交互类
@@ -48,23 +52,78 @@ final class DBOperate {
 	 * @throws SQLException 
 	 */
 	public int ExecuteNoQuery(String sql) throws SQLException{
-		return impl.ExecuteNoQuery(sql);
+		return ExecuteNoQuery(sql, null);
+	}
+	
+	/**
+	 * @param sql
+	 * @param callback
+	 * @return
+	 * @throws SQLException
+	 */
+	public int ExecuteNoQuery(String sql, IEvent8Param<PreparedStatement> callback) throws SQLException {
+	    return impl.ExecuteNoQuery(sql, callback);
 	}
 	
 	/**
 	 * @param sql
 	 * @return
+	 * @throws SQLException
 	 */
-	public Object ExecuteScalar(String sql){
-		return null;
+	public Object ExecuteScalar(String sql) throws SQLException {
+		return ExecuteScalar(sql, null);
 	}
 	
 	/**
 	 * @param sql
+	 * @param callback
 	 * @return
+	 * @throws SQLException
 	 */
-	public ResultSet  ExecuteQuery(String sql){
-		return impl.ExecuteQuery(sql);
+	public Object ExecuteScalar(String sql, IEvent8Param<PreparedStatement> callback) throws SQLException {
+		return ExecuteScalar(Object.class, sql, callback);
+	}
+	
+	/**
+	 * @param t
+	 * @param sql
+	 * @return
+	 * @throws SQLException 
+	 */
+	public <T> T ExecuteScalar(Class<T> t, String sql) throws SQLException{
+		return ExecuteScalar(t, sql, null);
+	}
+	
+	/**
+	 * @param t
+	 * @param sql
+	 * @param callback
+	 * @return
+	 * @throws SQLException
+	 */
+	public <T> T ExecuteScalar(Class<T> t, String sql, IEvent8Param<PreparedStatement> callback) throws SQLException{
+		return impl.ExecuteScalar(t, sql, callback);
+	}
+
+	/**
+	 * @param sql
+	 * @param setCallback
+	 * @param callback
+	 * @return
+	 * @throws SQLException 
+	 */
+	public boolean  ExecuteQuery(String sql, IEventRet8Param<Boolean, ResultSet> setCallback, IEvent8Param<PreparedStatement> callback) throws SQLException{
+		return impl.ExecuteQuery(sql, setCallback, callback);
+	}
+
+	/**
+	 * @param sql
+	 * @param setCallback
+	 * @return
+	 * @throws SQLException 
+	 */
+	public boolean  ExecuteQuery(String sql, IEventRet8Param<Boolean, ResultSet> setCallback) throws SQLException{
+		return ExecuteQuery(sql, setCallback, null);
 	}
 	
 	/**
@@ -81,7 +140,7 @@ final class DBOperate {
 	 * @return
 	 */
 	public static <T> boolean AddDBCreator(int type, ICreator creator) {
-		return DBOperateImpl.AddDBCreator(type, creator);
+		return ConnectionProxy.AddDBCreator(type, creator);
 	}
 	
 	DBOperateImpl impl = null;
