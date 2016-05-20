@@ -6,15 +6,29 @@ import org.w3c.dom.NodeList;
 
 import HiJCache.IParse;
 
-public class SQLPrase implements IParse<SQLInfo> {
+/**
+ * 解析XML
+ * @author 徐敏荣
+ *
+ */
+final class SQLPrase implements IParse<SQLInfo> {
 
+	/* (non-Javadoc)
+	 * @see HiJCache.IParse#Parse(org.w3c.dom.Element)
+	 */
 	@Override
 	public SQLInfo Parse(Element node) {
 		SQLInfo info = new SQLInfo();
 		NodeList nodes = node.getChildNodes(); 
 		if (nodes == null || nodes.getLength() < 1) {
 			return null;
+		}		
+
+		String dbtype = node.getAttribute("type");
+		if (dbtype == null || dbtype.trim().equals("")) {
+			return null;
 		}
+		info.setDBType(dbtype.toLowerCase());
 		
 		for (int i = 0; i < nodes.getLength(); i++) {
 			Node child = nodes.item(i);
@@ -39,6 +53,11 @@ public class SQLPrase implements IParse<SQLInfo> {
 		return info;
 	}
 	
+	/**
+	 * 解析SQ参数
+	 * @param node
+	 * @param info
+	 */
 	private void ParaseParamers(Element node, SQLInfo info) {
 		NodeList nodes = node.getChildNodes(); 
 		for (int i = 0; i < nodes.getLength(); i++) {

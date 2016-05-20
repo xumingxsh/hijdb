@@ -9,5 +9,10 @@ import org.w3c.dom.Element;
  * @param <T>
  */
 public interface IParse<T> {
+	/**
+	 * 解析缓存的XML信息
+	 * @param node
+	 * @return
+	 */
 	public T Parse(Element node);
 }

@@ -22,7 +22,29 @@ public class SQLInfo {
 		}
 		return params;
 	}
+	public void setDBType(String dbTYpe) {
+		this.dbType = dbType;
+	}
+	public String getDBType() {
+		return dbType;
+	}
+	/**
+	 * 参数数组
+	 */
 	private List<SQLParamer> params;
+	
+	
+	/**
+	 * SQL语句
+	 */
 	private String sql;
+	/**
+	 * 计算查询总数的SQL语句
+	 */
 	private String countSQL;
+	
+	/**
+	 * 数据库类型
+	 */
+	private String dbType;
 }

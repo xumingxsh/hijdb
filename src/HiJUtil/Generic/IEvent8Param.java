@@ -1,6 +1,7 @@
 package HiJUtil.Generic;
 
 /**
+ * 单个参数,无返回值接口
  * @author xuminrong
  *
  * @param <T>

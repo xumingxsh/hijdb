@@ -1,6 +1,7 @@
 package HiJDB;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import HiJDB.Impl.DBOperateImpl;
 import HiJUtil.Generic.IEvent;;
@@ -11,7 +12,7 @@ import HiJUtil.Generic.IEvent;;
  *
  * @version 1.0.0.0
  */
-public final class DBOperate {	
+final class DBOperate {	
 	public static final int SQL_Server = 1;
 	public static final int Oracle = 2;
 	public static final int MySQL = 3;
@@ -44,8 +45,9 @@ public final class DBOperate {
 	/**
 	 * @param sql
 	 * @return
+	 * @throws SQLException 
 	 */
-	public int ExecuteNoQuery(String sql){
+	public int ExecuteNoQuery(String sql) throws SQLException{
 		return impl.ExecuteNoQuery(sql);
 	}
 	

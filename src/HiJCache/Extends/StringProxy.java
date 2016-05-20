@@ -7,8 +7,16 @@ import org.w3c.dom.NodeList;
 import HiJCache.CacheProxy;
 import HiJCache.IParse;
 
-public class StringProxy {
+/**
+ * 缓存字符串的代理
+ * @author 徐敏荣
+ *
+ */
+public final class StringProxy {
 
+	/**
+	 * 构造函数
+	 */
 	public StringProxy(){
 		impl.setParse(new IParse<String>(){
 

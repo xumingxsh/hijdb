@@ -6,7 +6,9 @@ import java.util.Map;
 
 import HiJDB.*;
 import HiJUtil.HiLog;
+import HiJUtil.HiTypeHelper;
 import HiJUtil.Generic.IEvent;
+import HiJUtil.Generic.IEvent8Param;
 
 /**
  * @author Administrator
@@ -22,6 +24,8 @@ public class DBOperateImpl {
 	public DBOperateImpl(String conn_str, String user, String pwd, int db_type, boolean is_close_after_execute){
 		this.connStr = conn_str;
 		this.db_type = db_type;
+		this.user = user;
+		this.pwd = pwd;
 		this.is_close_after_exe = is_close_after_execute;
 		this.creator = GetCreator(db_type);
 		is_init_success = InitDB(creator, db_type);
@@ -35,26 +39,132 @@ public class DBOperateImpl {
 	
 	/**
 	 * 关闭数据库连接
+	 * @throws SQLException 
 	 */
-	public void Close(){
-		
+	public void Close() {
+		if (this.is_close_after_exe) {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				conn = null;
+			}
+		}
 	}
 	
 	/**
 	 * @param sql
 	 * @return
+	 * @throws SQLException 
 	 */
-	public int ExecuteNoQuery(String sql){
-		return 0;
+	public int ExecuteNoQuery(String sql) throws SQLException{
+		return ExecuteNoQuery(sql, null);
+	}
+	
+	/**
+	 * @param sql
+	 * @param callback
+	 * @return
+	 * @throws SQLException
+	 */
+	public int ExecuteNoQuery(String sql, IEvent8Param<PreparedStatement> callback) throws SQLException {
+	    Connection conn = this.getConnection();
+	    if (conn == null) {
+	    	return -1;
+	    }
+	    PreparedStatement pstmt = null;
+	    try
+	    {
+	    	pstmt = (PreparedStatement) conn.prepareStatement(sql);
+	    	if (callback != null) {
+	    		callback.OnEvent(pstmt);
+	    	}
+	        return pstmt.executeUpdate();
+	    }
+	    finally
+	    {
+	    	if (pstmt != null) {
+	    		pstmt.close();
+	    	}
+	    	
+	    	if (this.is_close_after_exe && this.creator != null) {
+	    		this.creator.CloseConnection(conn);
+	    	}
+	    }
 	}
 	
 	/**
 	 * @param sql
 	 * @return
+	 * @throws SQLException
 	 */
-	public Object ExecuteScalar(String sql){
-		return null;
+	public Object ExecuteScalar(String sql) throws SQLException {
+		return ExecuteScalar(sql, null);
 	}
+	
+	/**
+	 * @param sql
+	 * @param callback
+	 * @return
+	 * @throws SQLException
+	 */
+	public Object ExecuteScalar(String sql, IEvent8Param<PreparedStatement> callback) throws SQLException {
+		return ExecuteScalar(Object.class, sql, callback);
+	}
+	
+	/**
+	 * @param t
+	 * @param sql
+	 * @return
+	 * @throws SQLException 
+	 */
+	public <T> T ExecuteScalar(Class<T> t, String sql) throws SQLException{
+		return ExecuteScalar(t, sql, null);
+	}
+	
+	/**
+	 * @param t
+	 * @param sql
+	 * @param callback
+	 * @return
+	 * @throws SQLException
+	 */
+	public <T> T ExecuteScalar(Class<T> t, String sql, IEvent8Param<PreparedStatement> callback) throws SQLException{
+	    Connection conn = this.getConnection();
+	    if (conn == null) {
+	    	return HiTypeHelper.GetDefault(t);
+	    }
+	    PreparedStatement pstmt = null;
+	    try
+	    {
+	    	pstmt = (PreparedStatement) conn.prepareStatement(sql);
+	    	if (callback != null) {
+	    		callback.OnEvent(pstmt);
+	    	}
+	    	ResultSet set = pstmt.executeQuery();
+	    	if (set == null) {
+	    		return HiTypeHelper.GetDefault(t);
+	    	}
+	    	if (!set.first()) {
+	    		return HiTypeHelper.GetDefault(t);
+	    	}
+	        return DBHelper.ReadValue(t, set, 0);
+	    }
+	    finally
+	    {
+	    	if (pstmt != null) {
+	    		pstmt.close();
+	    	}
+	    	
+	    	if (this.is_close_after_exe && this.creator != null) {
+	    		this.creator.CloseConnection(conn);
+	    	}
+	    }
+	}
+	
 	
 	/**
 	 * @param sql
@@ -82,6 +192,8 @@ public class DBOperateImpl {
 	}*/
 	
 	/**
+	 * 初始化数据库操作对象,主要实现:
+	 * 1) 注册driver
 	 * @param creator
 	 * @param db_type
 	 */
@@ -129,11 +241,28 @@ public class DBOperateImpl {
 		}
 	}
 	
+	private Connection getConnection() {
+		if (!this.is_close_after_exe) {
+			if (conn == null) {
+				conn = CreateConnection(connStr, user, pwd);
+			}
+			return conn;
+		} else {
+			if (this.creator != null) {
+				return this.creator.CreateConnection(connStr, user, pwd);
+			} else {
+				return null;
+			}
+		}
+	}
+	
 	Connection conn = null;
 	
 	ICreator creator = null;
 	boolean is_init_success = false;
 	String connStr = "";
+	String user = "";
+	String pwd = "";
 	int db_type = 1;
 	boolean is_close_after_exe = true;	
 	

@@ -1,6 +1,11 @@
 package HiJCache.Extends;
 
-public class SQLParamer {
+/**
+ * SQL≤Œ ˝
+ * @author –Ï√Ù»Ÿ
+ *
+ */
+public final class SQLParamer {
 	public void setName(String name) {
 		this.name = name;
 	}

@@ -2,6 +2,11 @@ package HiJUtil;
 
 import HiJUtil.Generic.IEvent8Param2;
 
+/**
+ * 日志类
+ * @author XuminRong
+ *
+ */
 public final class HiLog {
     /// <summary>
     /// 日志枚举
@@ -14,16 +19,28 @@ public final class HiLog {
     }
     
     /**
+     * 设置日志的具体实现
      * @param logfun
      */
     public static void SetLogFun(IEvent8Param2<String, LogType> logfun)  {
         onlog = logfun;
     }
+    
+    /**
+     * 写日志
+     * @param script
+     * @param type
+     */
     public static void Write(String script, LogType type) {
         if (onlog != null) {
             onlog.OnEvent(script, type);
         }
     }
+    
+    /**
+     * 
+     * @param script
+     */
     public static void Write(String script) {
     	Write(script, LogType.LT_Debug);
     }
