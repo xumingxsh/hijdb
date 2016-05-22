@@ -113,25 +113,7 @@ public final class DBHelper {
 	 * @return
 	 */
 	public static <T> T GetResultData(Class<T> cls, ResultSet set, int index, Map<String, Integer> columns) {
-		if (set == null || cls  == null) {
-			return null;
-		}
-		
-		try
-		{
-			T t = cls.newInstance();
-			if (!set.absolute(index)) {
-				return null;
-			}
-			if (!FillObject(cls, t, set, columns)) {
-				return null;
-			}
-			return t;
-			
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			return null;
-		}
+		return DBHelperImpl.GetResultData(cls,set, index);
 	}
 	
 	/**
