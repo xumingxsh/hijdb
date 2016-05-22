@@ -3,13 +3,21 @@ package HiJDB.Impl;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import HiJUtil.HiCBO;
 import HiJUtil.Generic.IEventRet8Param;
 
-final class DBHelper {
+/**
+ * 数据库操作辅助类
+ * @author XuminRong
+ *
+ */
+public class DBHelperImpl {
+
 	/**
 	 * 取得ResultSet中的值
 	 * @param t
@@ -23,6 +31,7 @@ final class DBHelper {
 		if (t == null || set == null) {
 			return null;
 		}
+		
 		if (t == Object.class) {
 			return (T)set.getObject(columnIndex);
 		}
@@ -115,6 +124,7 @@ final class DBHelper {
 	}
 	
 	/**
+	 * 根据ResultSet装载对象
 	 * @param cls
 	 * @param t
 	 * @param set
@@ -122,7 +132,7 @@ final class DBHelper {
 	 * @return
 	 * @throws SQLException
 	 */
-	public static <T extends Object> boolean FillObject(Class<T> cls, T t, ResultSet set, Map<String, Integer> columns) throws SQLException {
+	public static <T> boolean FillObject(Class<T> cls, T t, ResultSet set, Map<String, Integer> columns) throws SQLException {
 		if (cls == null || t == null || set == null) {
 			return false;
 		}
@@ -131,14 +141,137 @@ final class DBHelper {
 			columns = GetFieldIndex(set);
 		}
 		
+		final Map<String, Integer> cols = columns;
 		return HiCBO.FillObjectEx(t, cls, new IEventRet8Param<Object, String>(){
-
 			@Override
-			public Object OnEvent(String v) {
-				// TODO Auto-generated method stub
+			public final Object OnEvent(String v) {
+				try {
+				return ReadValue(Object.class, set, cols, v);
+				} catch (Exception ex) {
+					ex.printStackTrace();
+					return null;
+				}
+			}			
+		});
+	}
+
+	/**
+	 * 根据ResultSet装载对象
+	 * @param cls
+	 * @param t
+	 * @param set
+	 * @return
+	 * @throws SQLException
+	 */
+	public static <T> boolean FillObject(Class<T> cls, T t, ResultSet set) throws SQLException {
+		return FillObject(cls, t, set);
+	}
+	public static <T> T CreateObject(Class<T> cls, ResultSet set) {
+		try
+		{
+			T t = cls.newInstance();
+			FillObject(cls, t, set);		
+			return t;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return null;
+		}
+	}
+	
+	/**
+	 * 取得Set的列表
+	 * @param cls
+	 * @param set
+	 * @return
+	 * @throws SQLException
+	 */
+	public static <T> List<T> GetResultsList(Class<T> cls, ResultSet set) throws SQLException {
+		if (cls == null || set == null) {
+			return null;
+		}		
+		
+		Map<String, Integer> columns = GetFieldIndex(set);
+		if (columns == null) {
+			return null;
+		}
+		if (!set.first()) {
+			return null;
+		}
+		
+		List<T> list = new ArrayList<T>();
+		T t = GetFirst(cls, set, columns);
+		if (t != null) {
+			list.add(t);
+		}
+		while (set.next()) {
+			T it = CreateObject(cls, set);
+			if (it != null) {
+				list.add(it);
+			}
+		}
+		return list;
+	}
+
+	/**
+	 * 创建某行的对象
+	 * @param cls
+	 * @param set
+	 * @param index
+	 * @return
+	 */
+	public static <T> T GetResultData(Class<T> cls, ResultSet set, int index) {
+		return GetResultData(cls, set, index, null);
+	}
+
+	/**
+	 * 创建某行的对象
+	 * @param cls
+	 * @param set
+	 * @param index
+	 * @param columns
+	 * @return
+	 */
+	public static <T> T GetResultData(Class<T> cls, ResultSet set, int index, Map<String, Integer> columns) {
+		if (set == null || cls  == null) {
+			return null;
+		}
+		
+		try
+		{
+			T t = cls.newInstance();
+			if (!set.absolute(index)) {
 				return null;
 			}
+			if (!FillObject(cls, t, set, columns)) {
+				return null;
+			}
+			return t;
 			
-		});
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return null;
+		}
+	}
+	
+	/**
+	 * 取得第一个对象
+	 * @param cls
+	 * @param set
+	 * @return
+	 */
+	public static <T> T GetFirst(Class<T> cls, ResultSet set) {
+		return GetFirst(cls, set, null);
+	}
+	
+	
+	/**
+	 * 取得第一个对象
+	 * @param cls
+	 * @param set
+	 * @param columns
+	 * @return
+	 */
+	public static <T> T GetFirst(Class<T> cls, ResultSet set, Map<String, Integer> columns) {
+		return GetResultData(cls, set, 0, columns);
 	}
 }

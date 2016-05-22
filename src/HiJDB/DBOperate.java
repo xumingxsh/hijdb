@@ -17,8 +17,19 @@ import HiJUtil.Generic.IEventRet8Param;;
  * @version 1.0.0.0
  */
 final class DBOperate {	
+	/**
+	 * SQLServer数据库(用于选择数据库类型)
+	 */
 	public static final int SQL_Server = 1;
+	
+	/**
+	 * Oracle数据库(用于选择数据库类型)
+	 */
 	public static final int Oracle = 2;
+	
+	/**
+	 * MySQL数据库(用于选择数据库类型)
+	 */
 	public static final int MySQL = 3;
 	
 	/**
