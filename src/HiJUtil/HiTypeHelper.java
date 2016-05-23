@@ -1,5 +1,7 @@
 package HiJUtil;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -313,5 +315,56 @@ public final class HiTypeHelper {
 		}else {	 
 			return value.toString();	  
 		}
+    }
+    
+    public static <T> String ToString(Class<T> t, T obj) {
+    	if (t == null || t == null) {
+    		return "";
+    	}
+    	
+    	StringBuilder sb = new StringBuilder();
+    	sb.append("type:");
+    	sb.append(t.getName());
+    	sb.append("\r\n");
+    	if (IsNumer(t)) {
+        	sb.append("value:");
+        	sb.append(GetStr(t, obj));
+        	return sb.toString();
+    	}
+    	
+    	Method[] methods = t.getMethods();
+    	
+    	for (int i = 0; i < methods.length; i++) {
+    		Method method = methods[i];
+    		String name = method.getName();
+    		if (!name.startsWith("get")) {
+    			continue;
+    		}
+    		
+    		if (method.getParameters().length > 0) {
+    			continue;
+    		}
+    		
+    		Class<?> etType = method.getReturnType();
+    		if (etType == void.class || etType == Void.class) {
+    			continue;
+    		}
+    		Object val;
+			try {
+				val = method.invoke(obj);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				continue;
+			} 
+
+    		String property = name.substring(3, name.length());
+        	sb.append(property);
+        	sb.append(":");
+        	sb.append(GetStr(etType, val));
+        	sb.append(",");
+    	}
+    	
+    	return sb.toString();
     }
 }

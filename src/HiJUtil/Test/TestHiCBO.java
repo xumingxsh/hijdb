@@ -216,10 +216,20 @@ public class TestHiCBO {
 		int val2 = HiTypeHelper.GetDefault(int.class);
 		Assert.assertEquals(val2, -1);
 		Integer val3 = HiTypeHelper.GetDefault(Integer.class);
-		Assert.assertEquals(val2, -1);
+		Assert.assertEquals(val3, new Integer(-1));
 		boolean bl = HiTypeHelper.GetDefault(boolean.class);
 		Assert.assertFalse(bl);
 		Boolean bl2 = HiTypeHelper.GetDefault(Boolean.class);
 		Assert.assertFalse(bl2);
+	}
+	@Test
+	public void Test_ToString() {
+		TestObj obj = new TestObj();
+		obj.setX("test");
+		obj.setY(1);
+		obj.setDate2(null);
+		String str = HiTypeHelper.ToString(TestObj.class, obj);
+		Assert.assertTrue(str != null);
+		System.out.print(str);
 	}
 }

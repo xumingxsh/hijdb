@@ -44,6 +44,10 @@ public class DBHelperImpl {
 			Object val = set.getInt(columnIndex);
 			return (T)val;
 		}
+		if (t == int.class) {
+			Object val = set.getInt(columnIndex);
+			return (T)val;
+		}
 		if (t == short.class) {
 			Object val = set.getShort(columnIndex);
 			return (T)val;

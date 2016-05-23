@@ -8,6 +8,7 @@ import java.util.Map;
 
 import HiJDB.ICreator;
 import HiJUtil.HiLog;
+import HiJUtil.Generic.IEventRet;
 
 public final class ConnectionProxy {
 	
@@ -21,32 +22,21 @@ public final class ConnectionProxy {
 		this.db_type = db_type;
 		this.user = user;
 		this.pwd = pwd;
-		this.is_close_after_exe = is_close_after_execute;
 		this.creator = GetCreator(db_type);
-		is_init_success = InitDB(creator, db_type);
-		if (is_init_success) {
-			conn = CreateConnection(conn_str, user, pwd);
-			if (conn == null) {
-				is_init_success = false;
-			}
+		if(this.creator == null) {
+			return false;
 		}
-		
+		this.creator.setCloseAfterExecute(is_close_after_execute);
+		is_init_success = InitDB(creator, db_type);		
 		return is_init_success;
 	}
 	
 	
 	public Connection GetConnection() {
-		if (!this.is_close_after_exe) {
-			if (conn == null) {
-				conn = CreateConnection(connStr, user, pwd);
-			}
-			return conn;
+		if (this.creator != null) {
+			return this.creator.CreateConnection(connStr, user, pwd);
 		} else {
-			if (this.creator != null) {
-				return this.creator.CreateConnection(connStr, user, pwd);
-			} else {
-				return null;
-			}
+			return null;
 		}
 	}
 	
@@ -55,54 +45,23 @@ public final class ConnectionProxy {
 	 * @throws SQLException 
 	 */
 	public void Close() {
-		if (this.is_close_after_exe) {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				conn = null;
-			}
-		}
+    	this.creator.CloseConnection();
 	}
 	
 	public void CloseAfterExecute(Connection conn) {
-    	if (this.is_close_after_exe && this.creator != null) {
-    		this.creator.CloseConnection(conn);
-    	}		
+    	this.creator.CloseConnection(conn);
 	}
 	
 	public void CloseAfterExecute(Connection conn, boolean isTrans) {
-    	if (this.is_close_after_exe && this.creator != null) {
-    		this.creator.CloseConnection(conn, isTrans);
-    	}		
+    	this.creator.CloseConnection(conn, isTrans);
 	}
 	
-	private static Connection CreateConnection(String conn_str, String user, String pwd) {
-
-		try {
-			return  (Connection) DriverManager.getConnection(conn_str, user, pwd);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			
-			HiLog.Error(String.format(
-					"connection string (%s) create connection failed, beacuse:%s",
-					conn_str, e.getMessage()));
-			return null;
-		}
-	}
-	
-	Connection conn = null;	
 	ICreator creator = null;
 	boolean is_init_success = false;
 	String connStr = "";
 	String user = "";
 	String pwd = "";
 	int db_type = 1;
-	boolean is_close_after_exe = true;	
 	
 	/**
 	 * 添加要支持的数据库类型并提供创建类型
@@ -111,7 +70,7 @@ public final class ConnectionProxy {
 	 * @param creator
 	 * @return
 	 */
-	public static boolean AddDBCreator(int type, ICreator creator) {
+	public static boolean AddDBCreator(int type, IEventRet<ICreator> creator) {
 		if(creator == null || creators.containsKey(type)) {
 			return false;
 		}
@@ -123,7 +82,11 @@ public final class ConnectionProxy {
 		if(!creators.containsKey(type)) {
 			return null;
 		}
-		return creators.get(type);
+		IEventRet<ICreator> factory = creators.get(type);
+		if (factory == null) {
+			return null;
+		}
+		return factory.OnEvent();
 	}	
 
 	/**
@@ -161,6 +124,6 @@ public final class ConnectionProxy {
 		}
 	}
 
-	static Map<Integer, ICreator> creators = new HashMap<Integer, ICreator>();
+	static Map<Integer, IEventRet<ICreator>> creators = new HashMap<Integer, IEventRet<ICreator>>();
 	static Map<String, String> forNames = new HashMap<String, String>();
 }

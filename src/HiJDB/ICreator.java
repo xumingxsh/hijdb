@@ -39,10 +39,20 @@ public interface ICreator {
 	 * @param conn
 	 */
 	public void CloseConnection(Connection conn);
+	/**
+	 * 关闭数据库连接
+	 */
+	public void CloseConnection();
 	
 	/**
 	 * @param conn
 	 * @param isTrans
 	 */
 	public void CloseConnection(Connection conn, boolean isTrans);
+	
+	/**
+	 * 执行完操作后是否关闭
+	 * @param isCloseAfterExecute
+	 */
+	public void setCloseAfterExecute(boolean isCloseAfterExecute);
 }

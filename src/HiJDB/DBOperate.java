@@ -7,8 +7,8 @@ import java.sql.SQLException;
 
 import HiJDB.Impl.ConnectionProxy;
 import HiJDB.Impl.DBOperateImpl;
-import HiJUtil.Generic.IEvent;
 import HiJUtil.Generic.IEvent8Param;
+import HiJUtil.Generic.IEventRet;
 import HiJUtil.Generic.IEventRet8Param;;
 
 /**
@@ -17,7 +17,7 @@ import HiJUtil.Generic.IEventRet8Param;;
  *
  * @version 1.0.0.0
  */
-final class DBOperate {	
+public final class DBOperate {	
 	/**
 	 * SQLServer数据库(用于选择数据库类型)
 	 */
@@ -153,7 +153,7 @@ final class DBOperate {
 	 * @param creator
 	 * @return
 	 */
-	public static <T> boolean AddDBCreator(int type, ICreator creator) {
+	public static boolean AddDBCreator(int type, IEventRet<ICreator> creator) {
 		return ConnectionProxy.AddDBCreator(type, creator);
 	}
 	

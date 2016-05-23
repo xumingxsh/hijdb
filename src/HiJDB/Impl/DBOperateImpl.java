@@ -86,7 +86,7 @@ public class DBOperateImpl {
 	    	if (!set.first()) {
 	    		return HiTypeHelper.GetDefault(t);
 	    	}
-	        return DBHelper.ReadValue(t, set, 0);
+	        return DBHelper.ReadValue(t, set, 1);
 	    }
 	    finally
 	    {
