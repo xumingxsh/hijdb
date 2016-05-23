@@ -8,7 +8,7 @@ package HiJUtil.Generic;
  */
 public interface IResult<T> {
 	public boolean GetIsSuccess();
-	public boolean SetIsSuccess();
+	public void SetIsSuccess(boolean isSuccess);
 	public T Get();
 	public void Set(T t);
 }
