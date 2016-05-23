@@ -1,5 +1,6 @@
 package HiJDB;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -116,12 +117,14 @@ final class DBOperate {
 		return impl.ExecuteScalar(t, sql, callback);
 	}
 
+	
 	/**
+	 * 执行查询
 	 * @param sql
-	 * @param setCallback
-	 * @param callback
+	 * @param setCallback 需要对结果进行的处理
+	 * @param callback 需要设置相关参数
 	 * @return
-	 * @throws SQLException 
+	 * @throws SQLException
 	 */
 	public boolean  ExecuteQuery(String sql, IEventRet8Param<Boolean, ResultSet> setCallback, IEvent8Param<PreparedStatement> callback) throws SQLException{
 		return impl.ExecuteQuery(sql, setCallback, callback);
@@ -140,7 +143,7 @@ final class DBOperate {
 	/**
 	 * @param evt
 	 */
-	public void OnTrans(IEvent evt) {
+	public void OnTrans(IEventRet8Param<Boolean, Connection> evt) {
 		impl.OnTrans(evt);
 	}
 

@@ -74,6 +74,12 @@ public final class ConnectionProxy {
     	}		
 	}
 	
+	public void CloseAfterExecute(Connection conn, boolean isTrans) {
+    	if (this.is_close_after_exe && this.creator != null) {
+    		this.creator.CloseConnection(conn, isTrans);
+    	}		
+	}
+	
 	private static Connection CreateConnection(String conn_str, String user, String pwd) {
 
 		try {

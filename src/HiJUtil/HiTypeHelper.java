@@ -115,6 +115,14 @@ public final class HiTypeHelper {
 		if (t == String.class) {
 			return t.cast("");
 		}
+		if (t == boolean.class) {
+			Object ret = false;
+			return (T)ret;
+		}
+		if (t == Boolean.class) {
+			Object ret = false;
+			return (T)ret;
+		}
 		if (t == BigDecimal.class) {
 			return (T)(new BigDecimal(-1));
 		}
@@ -166,6 +174,9 @@ public final class HiTypeHelper {
     	if (t == Object.class) {
     		return false;
     	}
+    	if (t == void.class) {
+    		return false;
+    	}
     	Class<?> superClass = t.getSuperclass();
     	if (superClass == null) {
     		return true;
@@ -205,6 +216,20 @@ public final class HiTypeHelper {
 			String text = GetStr(objClass, value);
 			Object ret = Short.parseShort(text); 	 
 			return (T)ret; 	 
+		}
+		if (t == boolean.class || t == Boolean.class) {
+			if (objClass == int.class) {
+				Object ret = (int)value >= 1? true:false;
+				return (T)ret;
+			} 
+			if (objClass == Integer.class) {
+				Object ret = (Integer)value >= 1? true:false;
+				return (T)ret;
+			} 
+			String text = GetStr(objClass, value);
+			Object ret = Integer.parseInt(text); 	
+			ret = (int)ret >= 1? true:false;
+			return (T)ret; 
 		}
 		if (t == long.class) {
 			if (objClass == long.class) {

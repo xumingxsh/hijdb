@@ -35,38 +35,14 @@ public final class DBHelper {
 	 * 取得ResultSet中的值
 	 * @param t
 	 * @param set
-	 * @param columns
 	 * @param field
 	 * @return
 	 * @throws SQLException
 	 */
-	public static <T> T ReadValue(Class<T> t, ResultSet set, Map<String, Integer> columns, String field) throws SQLException {
-		return DBHelperImpl.ReadValue(t, set, columns, field);
+	public static <T> T ReadValue(Class<T> t, ResultSet set, String field) throws SQLException {
+		return DBHelperImpl.ReadValue(t, set, field);
 	}
 	
-	/**
-	 * 取得列名对应的列索引
-	 * @param set
-	 * @return
-	 * @throws SQLException
-	 */
-	public static Map<String, Integer> GetFieldIndex(ResultSet set) throws SQLException {
-		return DBHelperImpl.GetFieldIndex(set);
-	}
-	
-	/**
-	 * 根据ResultSet装载对象
-	 * @param cls
-	 * @param t
-	 * @param set
-	 * @param columns
-	 * @return
-	 * @throws SQLException
-	 */
-	public static <T> boolean FillObject(Class<T> cls, T t, ResultSet set, Map<String, Integer> columns) throws SQLException {
-		return DBHelperImpl.FillObject(cls, t, set, columns);
-	}
-
 	/**
 	 * 根据ResultSet装载对象
 	 * @param cls
@@ -76,8 +52,9 @@ public final class DBHelper {
 	 * @throws SQLException
 	 */
 	public static <T> boolean FillObject(Class<T> cls, T t, ResultSet set) throws SQLException {
-		return FillObject(cls, t, set);
+		return DBHelperImpl.FillObject(cls, t, set);
 	}
+
 	public static <T> T CreateObject(Class<T> cls, ResultSet set) {
 		return DBHelperImpl.CreateObject(cls,set);
 	}
@@ -103,18 +80,6 @@ public final class DBHelper {
 	public static <T> T GetResultData(Class<T> cls, ResultSet set, int index) {
 		return DBHelperImpl.GetResultData(cls,set, index);
 	}
-
-	/**
-	 * 创建某行的对象
-	 * @param cls
-	 * @param set
-	 * @param index
-	 * @param columns
-	 * @return
-	 */
-	public static <T> T GetResultData(Class<T> cls, ResultSet set, int index, Map<String, Integer> columns) {
-		return DBHelperImpl.GetResultData(cls,set, index);
-	}
 	
 	/**
 	 * 取得第一个对象
@@ -123,18 +88,6 @@ public final class DBHelper {
 	 * @return
 	 */
 	public static <T> T GetFirst(Class<T> cls, ResultSet set) {
-		return GetFirst(cls, set, null);
-	}
-	
-	
-	/**
-	 * 取得第一个对象
-	 * @param cls
-	 * @param set
-	 * @param columns
-	 * @return
-	 */
-	public static <T> T GetFirst(Class<T> cls, ResultSet set, Map<String, Integer> columns) {
-		return GetResultData(cls, set, 0, columns);
+		return DBHelperImpl.GetFirst(cls, set);
 	}
 }

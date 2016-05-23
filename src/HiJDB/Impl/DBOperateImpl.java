@@ -137,9 +137,38 @@ public class DBOperateImpl {
 	
 	/**
 	 * @param evt
+	 * @throws SQLException 
 	 */
-	public void OnTrans(IEvent evt) {
-		
+	public boolean OnTrans(IEventRet8Param<Boolean, Connection> evt)  {
+		Connection conn = connProxy.GetConnection();
+	    if (conn == null) {
+	    	return false;
+	    }
+	    try
+	    {
+	    	conn.setAutoCommit(false);
+	    	Boolean ret = evt.OnEvent(conn);
+	    	if (ret) {
+		    	conn.commit();
+		    	return true;
+	    	} else {
+	    		conn.rollback();
+		        return false;
+	    	}
+	    } catch(Exception ex) {
+	    	ex.printStackTrace();	    	
+	    	try {
+				conn.rollback();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    	return false;
+	    }
+	    finally
+	    {	  
+	    	connProxy.CloseAfterExecute(conn, true);
+	    }
 	}
 		
 	ConnectionProxy connProxy = new ConnectionProxy();

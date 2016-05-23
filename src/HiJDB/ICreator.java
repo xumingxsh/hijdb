@@ -4,7 +4,7 @@ import java.sql.Connection;
 
 /**
  * 数据库访问相关属性提供接口
- * @author Administrator
+ * @author XuminRong
  *
  */
 public interface ICreator {
@@ -22,10 +22,27 @@ public interface ICreator {
 	 * @return
 	 */
 	public Connection CreateConnection(String conn, String user, String pwd);
+
+	
+	/**
+	 * 创建数据库连接
+	 * @param conn
+	 * @param user
+	 * @param pwd
+	 * @param isTrans
+	 * @return
+	 */
+	public Connection CreateConnection(String conn, String user, String pwd, boolean isTrans);
 	
 	/**
 	 * 关闭数据库连接
 	 * @param conn
 	 */
 	public void CloseConnection(Connection conn);
+	
+	/**
+	 * @param conn
+	 * @param isTrans
+	 */
+	public void CloseConnection(Connection conn, boolean isTrans);
 }

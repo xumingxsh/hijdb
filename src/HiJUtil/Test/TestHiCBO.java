@@ -169,6 +169,22 @@ public class TestHiCBO {
 		text = "1";
 		ret2 = HiTypeHelper.Cast(Integer.class, text);
 		Assert.assertEquals(ret2.intValue(), 1);
+		boolean bl = HiTypeHelper.Cast(boolean.class, 1);
+		Assert.assertTrue(bl);
+		bl = HiTypeHelper.Cast(boolean.class, 3);
+		Assert.assertTrue(bl);
+		bl = HiTypeHelper.Cast(boolean.class, 0);
+		Assert.assertFalse(bl);
+		bl = HiTypeHelper.Cast(boolean.class, -1);
+		Assert.assertFalse(bl); 
+		bl = HiTypeHelper.Cast(boolean.class, "1");
+		Assert.assertTrue(bl);
+		bl = HiTypeHelper.Cast(boolean.class, "3");
+		Assert.assertTrue(bl);
+		bl = HiTypeHelper.Cast(boolean.class, "0");
+		Assert.assertFalse(bl);
+		bl = HiTypeHelper.Cast(boolean.class, "-1");
+		Assert.assertFalse(bl);
 	}
 	@Test
 	public void Test_HiTypeHelper_Number() {
@@ -178,6 +194,17 @@ public class TestHiCBO {
 		Assert.assertTrue(HiTypeHelper.IsNumer(double.class));
 		Assert.assertTrue(HiTypeHelper.IsNumer(long.class));
 		Assert.assertTrue(HiTypeHelper.IsNumer(short.class));
+		Assert.assertTrue(HiTypeHelper.IsNumer(boolean.class));
+		Assert.assertTrue(HiTypeHelper.IsNumer(char.class));
+		Assert.assertTrue(HiTypeHelper.IsNumer(Float.class));
+		Assert.assertTrue(HiTypeHelper.IsNumer(Double.class));
+		Assert.assertTrue(HiTypeHelper.IsNumer(Long.class));
+		Assert.assertTrue(HiTypeHelper.IsNumer(Short.class));
+		Assert.assertTrue(HiTypeHelper.IsNumer(byte.class));
+		Assert.assertTrue(HiTypeHelper.IsNumer(Byte.class));
+		Assert.assertFalse(HiTypeHelper.IsNumer(Boolean.class));
+		Assert.assertFalse(HiTypeHelper.IsNumer(void.class));
+		Assert.assertFalse(HiTypeHelper.IsNumer(Void.class));
 		Assert.assertFalse(HiTypeHelper.IsNumer(EnumTest.class));
 		Assert.assertFalse(HiTypeHelper.IsNumer(Object.class));
 	}
@@ -190,5 +217,9 @@ public class TestHiCBO {
 		Assert.assertEquals(val2, -1);
 		Integer val3 = HiTypeHelper.GetDefault(Integer.class);
 		Assert.assertEquals(val2, -1);
+		boolean bl = HiTypeHelper.GetDefault(boolean.class);
+		Assert.assertFalse(bl);
+		Boolean bl2 = HiTypeHelper.GetDefault(Boolean.class);
+		Assert.assertFalse(bl2);
 	}
 }
