@@ -50,6 +50,10 @@ final class SQLPrase implements IParse<SQLInfo> {
 		if (info.getSQL() == null || info.getSQL().trim() == "") {
 			return null;
 		}
+		
+		if (!info.InitParam()) {
+			return null;
+		}
 		return info;
 	}
 	
@@ -77,7 +81,7 @@ final class SQLPrase implements IParse<SQLInfo> {
 			SQLParamer paramer = new SQLParamer();
 			paramer.setName(name);
 			paramer.setValue(value);
-			info.getParams().add(paramer);
+			info.getParams().put(name, paramer);
 		}
 	}
 

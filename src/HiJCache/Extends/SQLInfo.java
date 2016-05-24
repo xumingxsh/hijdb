@@ -1,11 +1,14 @@
 package HiJCache.Extends;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SQLInfo {
 	public void setSQL(String sql){
 		this.sql = sql;
+		sqlList = ParseSQL.Parase(sql);
 	}
 	public String getSQL(){
 		return sql;
@@ -16,22 +19,41 @@ public class SQLInfo {
 	public String getCountSQL() {
 		return countSQL;
 	}
-	public List<SQLParamer> getParams() {
+	public Map<String, SQLParamer> getParams() {
 		if (params == null) {
-			params = new ArrayList<SQLParamer>();
+			params = new HashMap<String, SQLParamer>();
 		}
 		return params;
 	}
-	public void setDBType(String dbTYpe) {
+	public void setDBType(String dbType) {
 		this.dbType = dbType;
 	}
-	public String getDBType() {
+	public String getDbType() {
 		return dbType;
 	}
+	
+	public boolean InitParam() {
+		if (sqlList == null) {
+			return false;
+		}
+		for (int i = 0; i < sqlList.size(); i++) {
+			SQLStr info = sqlList.get(i);
+			if (!info.isParam()) {
+				continue;
+			}
+			
+			if (!params.containsKey(info.getText())) {
+				return false;
+			}
+			info.setValue(params.get(info.getText()).getValue());
+		}
+		return true;
+	}
+
 	/**
 	 * 参数数组
 	 */
-	private List<SQLParamer> params;
+	private Map<String, SQLParamer> params;
 	
 	
 	/**
@@ -47,4 +69,6 @@ public class SQLInfo {
 	 * 数据库类型
 	 */
 	private String dbType;
+	
+	private List<SQLStr> sqlList;
 }
