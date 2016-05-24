@@ -232,4 +232,14 @@ public class TestHiCBO {
 		Assert.assertTrue(str != null);
 		System.out.print(str);
 	}
+	
+	class X{
+		
+	}
+	@Test
+	public void Test_ToString_null(){
+		X x = null;
+		String str =  HiTypeHelper.ToString(X.class, x);
+		Assert.assertEquals(str, "");
+	}
 }

@@ -318,7 +318,7 @@ public final class HiTypeHelper {
     }
     
     public static <T> String ToString(Class<T> t, T obj) {
-    	if (t == null || t == null) {
+    	if (t == null || obj == null) {
     		return "";
     	}
     	

@@ -1,5 +1,5 @@
 package HiJDB.Test;
-import java.sql.ResultSet;
+
 import java.sql.SQLException;
 
 import org.junit.Assert;

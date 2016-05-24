@@ -1,16 +1,10 @@
 package HiJDB;
 
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import HiJDB.Impl.DBHelperImpl;
-import HiJUtil.HiCBO;
-import HiJUtil.Generic.IEventRet8Param;
 
 /**
  * 数据库相关辅助类

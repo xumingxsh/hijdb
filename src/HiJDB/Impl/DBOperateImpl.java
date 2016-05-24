@@ -3,7 +3,6 @@ package HiJDB.Impl;
 import java.sql.*;
 
 import HiJUtil.HiTypeHelper;
-import HiJUtil.Generic.IEvent;
 import HiJUtil.Generic.IEvent8Param;
 import HiJUtil.Generic.IEventRet8Param;
 import HiJDB.DBHelper;

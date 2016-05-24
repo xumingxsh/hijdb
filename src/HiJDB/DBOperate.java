@@ -4,12 +4,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 import HiJDB.Impl.ConnectionProxy;
 import HiJDB.Impl.DBOperateImpl;
+import HiJUtil.Generic.HiResult;
 import HiJUtil.Generic.IEvent8Param;
 import HiJUtil.Generic.IEventRet;
-import HiJUtil.Generic.IEventRet8Param;;
+import HiJUtil.Generic.IEventRet8Param;
 
 /**
  * 数据库交互类
@@ -128,6 +130,89 @@ public final class DBOperate {
 	 */
 	public boolean  ExecuteQuery(String sql, IEventRet8Param<Boolean, ResultSet> setCallback, IEvent8Param<PreparedStatement> callback) throws SQLException{
 		return impl.ExecuteQuery(sql, setCallback, callback);
+	}
+
+	/**
+	 * 返回对象列表
+	 * @param cls
+	 * @param sql
+	 * @return
+	 */
+	public <T> List<T> ExecuteQuery(Class<T> cls, String sql) {
+		return ExecuteQuery(cls, sql, null);
+	}
+		
+	/**
+	 * 返回对象列表
+	 * @param cls
+	 * @param sql
+	 * @param callback
+	 * @return
+	 */
+	public <T> List<T> ExecuteQuery(Class<T> cls, String sql, IEvent8Param<PreparedStatement> callback) {
+		try {
+			final HiResult<List<T>> result = new HiResult<List<T>>();
+			result.Set(null);
+			impl.ExecuteQuery(sql, new IEventRet8Param<Boolean, ResultSet>(){
+
+				@Override
+				public Boolean OnEvent(ResultSet v) {
+					List<T> lst = null;
+					try {
+						lst = DBHelper.GetResultsList(cls, v);
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						return false;
+					}
+					result.Set(lst);
+					return lst != null;
+				}				
+			}, callback);
+			return result.Get();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	/**
+	 * 返回第一行创建的对象
+	 * @param cls
+	 * @param sql
+	 * @return
+	 */
+	public <T> T ExecuteQuerySingle(Class<T> cls, String sql) {
+		return ExecuteQuerySingle(cls, sql, null);
+	}
+	
+	/**
+	 * 返回第一行创建的对象
+	 * @param cls
+	 * @param sql
+	 * @param callback
+	 * @return
+	 */
+	public <T> T ExecuteQuerySingle(Class<T> cls, String sql, IEvent8Param<PreparedStatement> callback) {
+		try {
+			final HiResult<T> result = new HiResult<T>();
+			result.Set(null);
+			impl.ExecuteQuery(sql, new IEventRet8Param<Boolean, ResultSet>(){
+
+				@Override
+				public Boolean OnEvent(ResultSet v) {
+						T t = DBHelper.GetFirst(cls, v);
+						result.Set(t);
+						return true;
+				}				
+			}, callback);
+			return result.Get();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	/**
