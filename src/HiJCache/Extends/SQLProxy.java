@@ -3,17 +3,14 @@ package HiJCache.Extends;
 import HiJCache.*;
 
 public final class SQLProxy {
-	public SQLProxy(){
-		impl.setParse(new SQLPrase());
-	}
 	
     /**
      * 载入XML文件夹下的所有XML数据
      * @param path
      * @throws Exception
      */
-    public void LoadXMLsByFolder(String path) throws Exception {
-        impl.LoadXMLsByFolder(path);
+    public static void LoadXMLsByFolder(String path) throws Exception {
+    	GetImpl().LoadXMLsByFolder(path);
     }
     
     /**
@@ -23,8 +20,17 @@ public final class SQLProxy {
      * @param id
      * @return
      */
-    public SQLInfo GetValue(String id){
-        return impl.GetValue(id);
+    public static SQLInfo GetValue(String id){
+        return GetImpl().GetValue(id);
     }
-	CacheProxy<SQLInfo> impl = new CacheProxy<SQLInfo>();
+    
+	static CacheProxy<SQLInfo> impl = null;
+	
+	private static CacheProxy<SQLInfo> GetImpl() {
+		if (impl == null) {
+			impl = new CacheProxy<SQLInfo>();
+			impl.setParse(new SQLPrase());
+		}
+		return impl;
+	}
 }

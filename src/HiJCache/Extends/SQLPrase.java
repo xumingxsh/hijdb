@@ -39,7 +39,7 @@ final class SQLPrase implements IParse<SQLInfo> {
 			if (item.getNodeName().toLowerCase().equals("text")) {
 				info.setSQL(item.getTextContent());
 			}
-			if (item.getNodeName().toLowerCase().equals("countsql")) {
+			if (item.getNodeName().toLowerCase().equals("count")) {
 				info.setCountSQL(item.getTextContent());
 			}
 			if (item.getNodeName().toLowerCase().equals("paramers")) {
@@ -78,10 +78,6 @@ final class SQLPrase implements IParse<SQLInfo> {
 			if (name == null || value == null) {
 				continue;
 			}
-			SQLParamer paramer = new SQLParamer();
-			paramer.setName(name);
-			paramer.setValue(value);
-			info.getParams().put(name, paramer);
 		}
 	}
 

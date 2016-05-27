@@ -1,7 +1,7 @@
 package HiJUtil.Generic;
 
 /**
- * 单独参数,又返回值匿名类
+ * 单独参数,有返回值匿名类
  * @author XuminRong
  *
  * @param <T>

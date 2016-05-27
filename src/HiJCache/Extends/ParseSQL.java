@@ -21,11 +21,6 @@ public class ParseSQL {
 		while (end >= 0) {
 			String text = sql.substring(begin, end);
 			SQLStr param1 = new SQLStr();
-			if (text.indexOf("@") >= 0) {
-				param1.setParam(true);
-			} else {
-				param1.setParam(false);
-			}
 			param1.setText(text);
 			lst.add(param1);
 			begin = end;
@@ -33,11 +28,6 @@ public class ParseSQL {
 			if (end != -1) {
 				text = sql.substring(begin, end);
 				SQLStr param2 = new SQLStr();
-				if (text.indexOf("@") >= 0) {
-					param2.setParam(true);
-				} else {
-					param2.setParam(false);
-				}
 				param2.setText(text);
 				lst.add(param2);
 			}  else {
@@ -52,17 +42,12 @@ public class ParseSQL {
 			String text = sql.substring(begin, sql.length());
 			SQLStr param = new SQLStr();
 			param.setText(text);
-			if (text.indexOf("@") >= 0) {
-				param.setParam(true);
-			} else {
-				param.setParam(false);
-			}
 			lst.add(param);
 		}
 		return lst;
 	}
 
-	static String[] arr = {" ", "\t", "\r", ",", ")", ">", "<", "!", "'", "-", "+", "/"};			
+	static String[] arr = {" ", "\t", "\n", "\r", ",", ")", ">", "<", "!", "'", "-", "+", "/"};			
 	private static int GetParamEnd(String sql, int begin) {
 		int index = -1;
 		for (int i = 0; i < arr.length; i++) {
@@ -86,6 +71,9 @@ public class ParseSQL {
 	 * @return
 	 */
 	public static String CreateSQL(List<SQLStr> lst, IEventRet8Param<String, String> callback) {
+		if (lst == null) {
+			return "";
+		}
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < lst.size(); i++) {
 			SQLStr info = lst.get(i);
@@ -96,7 +84,7 @@ public class ParseSQL {
 			if (callback == null) {
 				return "";
 			}
-			String ret = callback.OnEvent(info.getText());
+			String ret = callback.OnEvent(info.getValue());
 			sb.append(ret == null? "": ret);
 		}
 		return sb.toString();

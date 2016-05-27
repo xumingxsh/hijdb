@@ -1,6 +1,22 @@
 <?xml version="1.0"?>
 <SQL-List>
     <MODULE id="Charactersets" script="数据库表【Charactersets】的基本数据库操作">
+        <!--【COLLATIONS】：添加-向表中添加一条记录。-->
+        <SQL id="DATA.COLLATIONS.ADD" type="sqlserver">
+            <TEXT>
+            INSERT INTO Collations(COLLATION_NAME , CHARACTER_SET_NAME , ID , IS_DEFAULT , IS_COMPILED , SORTLEN ) VALUES(@COLLATION_NAME , @CHARACTER_SET_NAME , @ID , @IS_DEFAULT , @IS_COMPILED , @SORTLEN )
+            
+            </TEXT>
+
+            <Paramers>
+                <paramer name="@COLLATION_NAME" value="COLLATION_NAME" script="COLLATION_NAME"/>
+                <paramer name="@CHARACTER_SET_NAME" value="CHARACTER_SET_NAME" script="CHARACTER_SET_NAME"/>
+                <paramer name="@ID" value="ID" script="ID"/>
+                <paramer name="@IS_DEFAULT" value="IS_DEFAULT" script="IS_DEFAULT"/>
+                <paramer name="@IS_COMPILED" value="IS_COMPILED" script="IS_COMPILED"/>
+                <paramer name="@SORTLEN" value="SORTLEN" script="SORTLEN"/>
+            </Paramers>
+        </SQL>
         <!--【CHARACTER_SETS】：添加-向表中添加一条记录。-->
         <SQL id="DATA.CHARACTERSETS.ADD" type="sqlserver">
             <TEXT>

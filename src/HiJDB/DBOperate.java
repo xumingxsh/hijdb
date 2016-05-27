@@ -173,6 +173,7 @@ public final class DBOperate {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			System.out.println(sql);
 			return null;
 		}
 	}
@@ -211,6 +212,7 @@ public final class DBOperate {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			System.out.println(sql);
 			return null;
 		}
 	}

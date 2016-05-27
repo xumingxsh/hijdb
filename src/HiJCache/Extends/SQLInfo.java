@@ -1,9 +1,8 @@
 package HiJCache.Extends;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
+import HiJUtil.Generic.IEventRet8Param;
 
 public class SQLInfo {
 	public void setSQL(String sql){
@@ -18,12 +17,6 @@ public class SQLInfo {
 	}
 	public String getCountSQL() {
 		return countSQL;
-	}
-	public Map<String, SQLParamer> getParams() {
-		if (params == null) {
-			params = new HashMap<String, SQLParamer>();
-		}
-		return params;
 	}
 	public void setDBType(String dbType) {
 		this.dbType = dbType;
@@ -41,19 +34,9 @@ public class SQLInfo {
 			if (!info.isParam()) {
 				continue;
 			}
-			
-			if (!params.containsKey(info.getText())) {
-				return false;
-			}
-			info.setValue(params.get(info.getText()).getValue());
 		}
 		return true;
 	}
-
-	/**
-	 * 参数数组
-	 */
-	private Map<String, SQLParamer> params;
 	
 	
 	/**
@@ -65,6 +48,17 @@ public class SQLInfo {
 	 */
 	private String countSQL;
 	
+	public List<SQLStr> getSqlList() {
+		return sqlList;
+	}
+	
+	public String getSQL(IEventRet8Param<String, String> evt) {
+		if (sqlList == null) {
+			return sql;
+		}
+		return ParseSQL.CreateSQL(sqlList, evt);
+	}
+
 	/**
 	 * 数据库类型
 	 */

@@ -2,6 +2,7 @@ package HiJCache.Test;
 
 import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import HiJCache.Extends.ParseSQL;
@@ -9,7 +10,6 @@ import HiJCache.Extends.SQLInfo;
 import HiJCache.Extends.SQLProxy;
 import HiJCache.Extends.SQLStr;
 import HiJUtil.Generic.IEventRet8Param;
-import junit.framework.Assert;
 
 public class TestCacheProxy {
 	@SuppressWarnings("deprecation")
@@ -107,47 +107,47 @@ public class TestCacheProxy {
 			@Override
 			public String OnEvent(String v) {
 				switch (v) {
-				case "@a":
+				case "a":
 				{
 					return "a";
 				}
-				case "@b":
+				case "b":
 				{
 					return "b";
 				}
-				case "@c":
+				case "c":
 				{
 					return "c";
 				}
-				case "@d":
+				case "d":
 				{
 					return "d";
 				}
-				case "@e":
+				case "e":
 				{
 					return "e";
 				}
-				case "@f":
+				case "f":
 				{
 					return "f";
 				}
-				case "@g":
+				case "g":
 				{
 					return "g";
 				}
-				case "@h":
+				case "h":
 				{
 					return "h";
 				}
-				case "@i":
+				case "i":
 				{
 					return "i";
 				}
-				case "@j":
+				case "j":
 				{
 					return null;
 				}
-				case "@k":
+				case "k":
 				{
 					return "k";
 				}
